@@ -1,0 +1,4 @@
+spring:
+  application:
+    name: book-catalog
+    api-v1: /book-catalog/v1
