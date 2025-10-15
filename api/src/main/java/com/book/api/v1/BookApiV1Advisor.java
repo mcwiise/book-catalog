@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class BookApiV1Advisor {
     @ExceptionHandler(BookNotFoundException.class)
     public final ResponseEntity<HttpErrorBody> handleBookNotFoundException(BookNotFoundException ex) {
-        var errBody = new HttpErrorBody(LocalDateTime.now(), "Book not found.");
+        var errBody = new HttpErrorBody(LocalDateTime.now(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errBody);
     }
 }
