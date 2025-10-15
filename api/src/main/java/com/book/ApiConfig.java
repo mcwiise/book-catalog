@@ -2,6 +2,9 @@ package com.book;
 
 import com.book.api.v1.dto.CreateBookDto;
 import com.book.domain.BookId;
+import com.book.domain.dao.BookDao;
+import com.book.domain.dao.SimpleDao;
+import com.book.domain.dao.record.BookRecord;
 import com.book.usecase.DeleteBookByIdUseCase;
 import com.book.usecase.RetrieveBookByIdUseCase;
 import com.book.usecase.UseCase;
@@ -19,8 +22,8 @@ import java.util.Optional;
 public class ApiConfig {
 
     @Bean
-    public SimpleUseCase<List<Book>> getRetrieveBooksUseCaseBean() {
-        return new RetrieveBooksUseCase();
+    public SimpleUseCase<List<Book>> getRetrieveBooksUseCaseBean(SimpleDao<String, BookRecord> bookDao) {
+        return new RetrieveBooksUseCase(bookDao);
     }
 
     @Bean
@@ -38,4 +41,8 @@ public class ApiConfig {
         return new DeleteBookByIdUseCase();
     }
 
+    @Bean
+    public SimpleDao<String, BookRecord> getBookDaoBean() {
+        return new BookDao();
+    }
 }
