@@ -1,6 +1,8 @@
 package com.book;
 
 import com.book.api.v1.dto.CreateBookDto;
+import com.book.domain.BookId;
+import com.book.usecase.DeleteBookByIdUseCase;
 import com.book.usecase.RetrieveBookByIdUseCase;
 import com.book.usecase.UseCase;
 import com.book.domain.Book;
@@ -29,6 +31,11 @@ public class ApiConfig {
     @Bean
     public UseCase<String, Optional<Book>> getRetrieveBookByIdUseCaseBean() {
         return new RetrieveBookByIdUseCase();
+    }
+
+    @Bean
+    public UseCase<String, Optional<BookId>> getDeleteBookByIdUseCaseBean() {
+        return new DeleteBookByIdUseCase();
     }
 
 }
