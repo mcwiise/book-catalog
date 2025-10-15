@@ -1,3 +1,2 @@
 rootProject.name = 'book-catalog'
-include 'core'
 include 'api'
