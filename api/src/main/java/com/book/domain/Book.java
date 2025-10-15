@@ -1,4 +1,4 @@
-package com.book.usecase;
+package com.book.domain;
 
 import lombok.Builder;
 import lombok.Getter;

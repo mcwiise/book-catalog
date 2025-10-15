@@ -1,5 +1,7 @@
 package com.book.usecase;
 
+import com.book.domain.Book;
+
 import java.util.Collections;
 import java.util.List;
 

@@ -1,6 +1,10 @@
 package com.book.usecase;
 
 import com.book.api.v1.dto.CreateBookDto;
+import com.book.domain.Book;
+import com.book.domain.BookAuthor;
+import com.book.domain.BookId;
+import com.book.domain.BookTitle;
 
 import java.util.UUID;
 
