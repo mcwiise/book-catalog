@@ -1,12 +1,35 @@
 package com.book.usecase;
 
+import com.book.domain.Book;
+import com.book.domain.BookAuthor;
 import com.book.domain.BookId;
+import com.book.domain.BookTitle;
+import com.book.domain.dao.BookDao;
+import com.book.domain.dao.record.BookRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
-public class DeleteBookByIdUseCase implements UseCase<String, Optional<BookId>> {
+public class DeleteBookByIdUseCase implements UseCase<BookId, Optional<Book>> {
+
+    private final BookDao bookDao;
+
+    @Autowired
+    public DeleteBookByIdUseCase(BookDao bookDao) {
+        this.bookDao = bookDao;
+    }
+
     @Override
-    public Optional<BookId> exe(String rawBookId) {
-        return Optional.empty();
+    public Optional<Book> exe(BookId bookId) {
+        return this.bookDao.deleteBook(bookId.getValue())
+                .map(this::toDomainEntity);
+    }
+
+    private Book toDomainEntity(BookRecord record) {
+        return Book.builder()
+                .id(BookId.of(record.getId()))
+                .title(BookTitle.of(record.getTitle()))
+                .author(BookAuthor.of(record.getAuthor()))
+                .build();
     }
 }

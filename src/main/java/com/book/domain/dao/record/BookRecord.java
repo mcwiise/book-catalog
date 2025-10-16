@@ -1,14 +1,14 @@
 package com.book.domain.dao.record;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.ToString;
 
+@Builder(toBuilder = true)
+@ToString
 @Getter
-@Setter
-@AllArgsConstructor
 public class BookRecord {
-    private String id;
-    private String title;
-    private String author;
+    private final String id;
+    private final String title;
+    private final String author;
 }

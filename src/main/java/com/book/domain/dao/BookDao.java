@@ -1,11 +1,14 @@
 package com.book.domain.dao;
 
 import com.book.domain.dao.record.BookRecord;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class BookDao implements SimpleDao<String, BookRecord> {
@@ -24,7 +27,33 @@ public class BookDao implements SimpleDao<String, BookRecord> {
     }
 
     @Override
-    public Optional<BookRecord> findById(String s) {
-        return Optional.empty();
+    public Optional<BookRecord> findById(String rawBookId) {
+        return Optional.ofNullable(recordMap.get(rawBookId));
+    }
+
+    @Override
+    public BookRecord createBook(BookRecord record) {
+        var bookId = UUID.randomUUID().toString();
+        var bookRecordWithId = record.toBuilder().id(bookId).build();
+        recordMap.put(bookId, bookRecordWithId);
+        return bookRecordWithId;
+    }
+
+    @Override
+    public Optional<BookRecord> deleteBook(String rawBookId) {
+        return Optional.ofNullable(this.recordMap.remove(rawBookId));
+    }
+
+    public static void main(String[] args) throws JsonProcessingException {
+        var dao = new BookDao();
+
+        var bookRecordToCreate = BookRecord.builder().title("tales").author("tales").build();
+
+        var createdBookRecord = dao.createBook(bookRecordToCreate);
+
+        String json = new ObjectMapper().writeValueAsString(createdBookRecord);
+
+        System.out.println(json);
+        System.out.println(createdBookRecord);
     }
 }

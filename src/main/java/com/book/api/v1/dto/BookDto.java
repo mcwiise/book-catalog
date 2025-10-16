@@ -1,12 +1,12 @@
 package com.book.api.v1.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Value;
+import lombok.With;
 
-@Getter
-@Setter
+@Value
+@With
 public class BookDto {
-    private String id;
-    private String title;
-    private String author;
+    String id;
+    String title;
+    String author;
 }

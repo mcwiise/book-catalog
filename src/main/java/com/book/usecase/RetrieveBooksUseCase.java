@@ -1,5 +1,6 @@
 package com.book.usecase;
 
+import com.book.api.v1.dto.CreateBookDto;
 import com.book.domain.Book;
 import com.book.domain.BookAuthor;
 import com.book.domain.BookId;
@@ -22,15 +23,16 @@ public class RetrieveBooksUseCase implements SimpleUseCase<List<Book>> {
 
     @Override
     public List<Book> exe() {
-        return bookDao.findAll().stream()
+        return this.bookDao.findAll().stream()
                 .map(this::toDomainEntity)
                 .collect(Collectors.toList());
     }
 
-    public Book toDomainEntity(BookRecord bookRecord) {
-        return Book.builder().id(BookId.of(bookRecord.getId()))
-                .title(BookTitle.of(bookRecord.getTitle()))
-                .author(BookAuthor.of(bookRecord.getAuthor()))
+    private Book toDomainEntity(BookRecord record) {
+        return Book.builder()
+                .id(BookId.of(record.getId()))
+                .title(BookTitle.of(record.getTitle()))
+                .author(BookAuthor.of(record.getAuthor()))
                 .build();
     }
 }

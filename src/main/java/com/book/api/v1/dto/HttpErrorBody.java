@@ -1,15 +1,11 @@
 package com.book.api.v1.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Value;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@Getter
-@Setter
+@Value
 public class HttpErrorBody {
-    private LocalDateTime timestamp;
-    private String message;
+    LocalDateTime timestamp;
+    String message;
 }

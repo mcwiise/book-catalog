@@ -1,14 +1,9 @@
 package com.book.api.v1.dto;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Value;
 
-@Getter
-@Setter
+@Value
 public class CreateBookDto {
-    @NotNull
-    private String title;
-    @NotNull
-    private String author;
+    String title;
+    String author;
 }

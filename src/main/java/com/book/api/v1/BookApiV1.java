@@ -2,10 +2,14 @@ package com.book.api.v1;
 
 import com.book.api.v1.dto.BookDto;
 import com.book.api.v1.dto.CreateBookDto;
+import com.book.domain.BookAuthor;
 import com.book.domain.BookId;
+import com.book.domain.BookTitle;
 import com.book.domain.exception.BookNotFoundException;
 import com.book.usecase.CreateBooksUseCase;
+import com.book.usecase.DeleteBookByIdUseCase;
 import com.book.usecase.RetrieveBookByIdUseCase;
+import com.book.usecase.RetrieveBooksUseCase;
 import com.book.usecase.UseCase;
 import com.book.domain.Book;
 import com.book.usecase.SimpleUseCase;
@@ -27,17 +31,16 @@ import java.util.stream.Collectors;
 @RequestMapping("${spring.application.api-v1}")
 public class BookApiV1 {
 
-    private final SimpleUseCase<List<Book>> retrieveBooksUseCase;
+    private final RetrieveBooksUseCase retrieveBooksUseCase;
     private final CreateBooksUseCase createBookUseCase;
     private final RetrieveBookByIdUseCase retrieveBookByIdUseCase;
-    private final UseCase<String, Optional<BookId>> deleteBookUseCase;
-
+    private final DeleteBookByIdUseCase deleteBookUseCase;
 
     @Autowired
-    public BookApiV1(SimpleUseCase<List<Book>> retrieveBooksUseCase,
+    public BookApiV1(RetrieveBooksUseCase retrieveBooksUseCase,
                      CreateBooksUseCase createBookUseCase,
                      RetrieveBookByIdUseCase retrieveBookByIdUseCase,
-                     UseCase<String, Optional<BookId>> deleteBookUseCase) {
+                     DeleteBookByIdUseCase deleteBookUseCase) {
         this.retrieveBooksUseCase = retrieveBooksUseCase;
         this.createBookUseCase = createBookUseCase;
         this.retrieveBookByIdUseCase = retrieveBookByIdUseCase;
@@ -53,28 +56,37 @@ public class BookApiV1 {
 
     @GetMapping(path = "/books/{id}")
     public BookDto getBookById(@PathVariable String id){
-         return this.retrieveBookByIdUseCase.exe(id)
+         return this.retrieveBookByIdUseCase.exe(BookId.of(id))
                  .map(this::toDto)
                  .orElseThrow(() -> new BookNotFoundException("The book was not found by id: " + id));
     }
 
     @PostMapping(path = "/books")
     public BookDto postBook(@Valid @RequestBody CreateBookDto createBookDto){
-        var bookCreated = this.createBookUseCase.exe(createBookDto);
+        var bookToCreate = toDomainEntity(createBookDto);
+        var bookCreated = this.createBookUseCase.exe(bookToCreate);
         return toDto(bookCreated);
     }
 
     @DeleteMapping(path = "/books/{id}")
-    public BookId deleteBookById(@PathVariable String id){
-        return this.deleteBookUseCase.exe(id)
+    public BookDto deleteBookById(@PathVariable String id){
+        return this.deleteBookUseCase.exe(BookId.of(id))
+                .map(this::toDto)
                 .orElseThrow(() -> new BookNotFoundException("The book was not found by id: " + id));
     }
 
+    private Book toDomainEntity(CreateBookDto dto) {
+        return Book.builder()
+                .title(BookTitle.of(dto.getTitle()))
+                .author(BookAuthor.of(dto.getAuthor()))
+                .build();
+    }
+
     private BookDto toDto (Book book) {
-        BookDto bookDto = new BookDto();
-        bookDto.setId(book.getId().getValue());
-        bookDto.setAuthor(book.getAuthor().getValue());
-        bookDto.setTitle(book.getTitle().getValue());
+        var bookDto = new BookDto(
+                book.getId().getValue(),
+                book.getAuthor().getValue(),
+                book.getTitle().getValue());
         return bookDto;
     }
 }

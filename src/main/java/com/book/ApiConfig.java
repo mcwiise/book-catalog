@@ -16,13 +16,13 @@ import java.util.List;
 public class ApiConfig {
 
     @Bean
-    public SimpleUseCase<List<Book>> getRetrieveBooksUseCaseBean(BookDao bookDao) {
+    public RetrieveBooksUseCase getRetrieveBooksUseCaseBean(BookDao bookDao) {
         return new RetrieveBooksUseCase(bookDao);
     }
 
     @Bean
-    public CreateBooksUseCase getCreateBookUseCaseBean() {
-        return new CreateBooksUseCase();
+    public CreateBooksUseCase getCreateBookUseCaseBean(BookDao bookDao) {
+        return new CreateBooksUseCase(bookDao);
     }
 
     @Bean
@@ -31,8 +31,8 @@ public class ApiConfig {
     }
 
     @Bean
-    public DeleteBookByIdUseCase getDeleteBookByIdUseCaseBean() {
-        return new DeleteBookByIdUseCase();
+    public DeleteBookByIdUseCase getDeleteBookByIdUseCaseBean(BookDao bookDao) {
+        return new DeleteBookByIdUseCase(bookDao);
     }
 
     @Bean

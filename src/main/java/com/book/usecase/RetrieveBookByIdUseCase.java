@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
-public class RetrieveBookByIdUseCase implements UseCase<String, Optional<Book>> {
+public class RetrieveBookByIdUseCase implements UseCase<BookId, Optional<Book>> {
 
     private final SimpleDao<String, BookRecord> bookDao;
 
@@ -20,15 +20,16 @@ public class RetrieveBookByIdUseCase implements UseCase<String, Optional<Book>> 
     }
 
     @Override
-    public Optional<Book> exe(String rawBookId) {
-        return this.bookDao.findById(rawBookId)
+    public Optional<Book> exe(BookId bookId) {
+        return this.bookDao.findById(bookId.getValue())
                 .map(this::toDomainEntity);
     }
 
-    public Book toDomainEntity(BookRecord bookRecord) {
-        return Book.builder().id(BookId.of(bookRecord.getId()))
-                .title(BookTitle.of(bookRecord.getTitle()))
-                .author(BookAuthor.of(bookRecord.getAuthor()))
+    private Book toDomainEntity(BookRecord record) {
+        return Book.builder()
+                .id(BookId.of(record.getId()))
+                .title(BookTitle.of(record.getTitle()))
+                .author(BookAuthor.of(record.getAuthor()))
                 .build();
     }
 }

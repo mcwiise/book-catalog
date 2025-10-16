@@ -26,20 +26,32 @@ public class RetrieveBookByIdUseCaseTest {
     private RetrieveBookByIdUseCase retrieveBookByIdUseCase;
 
     @Test
-    public void shouldRetrieveAllBooksTest(){
+    public void shouldRetrieveEmptyOptionalWhenNoBookFoundTest(){
         //given
-        var bookIdMock = "1";
-        var bookRecordMock = Instancio.of(BookRecord.class)
-                .set(Select.field(BookRecord::getId), bookIdMock)
-                .create();
-        BDDMockito.given(this.bookDao.findById(anyString())).willReturn(Optional.of(bookRecordMock));
+        BDDMockito.given(this.bookDao.findById(anyString())).willReturn(Optional.empty());
 
         //when
-        var response = this.retrieveBookByIdUseCase.exe(bookIdMock);
+        var response = this.retrieveBookByIdUseCase.exe("1");
 
+        Assertions.assertFalse(response.isPresent());
+    }
+
+    @Test
+    public void shouldRetrieveABookByIdTest(){
+        //given
+        var rawBookId = "1";
+        var bookRecord = Instancio.of(BookRecord.class)
+                .set(Select.field(BookRecord::getId), rawBookId)
+                .create();
+        BDDMockito.given(this.bookDao.findById(anyString())).willReturn(Optional.of(bookRecord));
+
+        //when
+        var response = this.retrieveBookByIdUseCase.exe(rawBookId);
+
+        //then
         Assertions.assertTrue(response.isPresent());
-        Assertions.assertEquals(bookRecordMock.getId(), response.get().getId().getValue());
-        Assertions.assertEquals(bookRecordMock.getTitle(), response.get().getTitle().getValue());
-        Assertions.assertEquals(bookRecordMock.getAuthor(), response.get().getAuthor().getValue());
+        Assertions.assertEquals(rawBookId, response.get().getId().getValue());
+        Assertions.assertEquals(bookRecord.getTitle(), response.get().getTitle().getValue());
+        Assertions.assertEquals(bookRecord.getAuthor(), response.get().getAuthor().getValue());
     }
 }

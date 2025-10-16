@@ -5,16 +5,38 @@ import com.book.domain.Book;
 import com.book.domain.BookAuthor;
 import com.book.domain.BookId;
 import com.book.domain.BookTitle;
+import com.book.domain.dao.BookDao;
+import com.book.domain.dao.record.BookRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.UUID;
+public class CreateBooksUseCase implements UseCase<Book, Book> {
 
-public class CreateBooksUseCase implements UseCase<CreateBookDto, Book> {
+    private final BookDao bookDao;
+
+    @Autowired
+    public  CreateBooksUseCase(BookDao bookDao) {
+        this.bookDao = bookDao;
+    }
+
     @Override
-    public Book exe(CreateBookDto bookDto) {
-        var bookId = BookId.of(UUID.randomUUID().toString());
-        var bookTitle = BookTitle.of(bookDto.getTitle());
-        var bookAuthor = BookAuthor.of(bookDto.getAuthor());
-        var bookToCreate = Book.builder().id(bookId).title(bookTitle).author(bookAuthor).build();
-        return bookToCreate;
+    public Book exe(Book bookToCreate) {
+        var bookRecordToCreate = toRecord(bookToCreate);
+        var bookRecordCreated = this.bookDao.createBook(bookRecordToCreate);
+        return toDomainEntity(bookRecordCreated);
+    }
+
+    private BookRecord toRecord(Book book){
+        return BookRecord.builder()
+                .title(book.getTitle().getValue())
+                .author(book.getAuthor().getValue())
+                .build();
+    }
+
+    private Book toDomainEntity(BookRecord bookRecord){
+        return Book.builder()
+                .id(BookId.of(bookRecord.getId()))
+                .title(BookTitle.of(bookRecord.getTitle()))
+                .author(BookAuthor.of(bookRecord.getAuthor()))
+                .build();
     }
 }
