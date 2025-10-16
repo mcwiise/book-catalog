@@ -4,6 +4,8 @@ import com.book.api.v1.dto.BookDto;
 import com.book.api.v1.dto.CreateBookDto;
 import com.book.domain.BookId;
 import com.book.domain.exception.BookNotFoundException;
+import com.book.usecase.CreateBooksUseCase;
+import com.book.usecase.RetrieveBookByIdUseCase;
 import com.book.usecase.UseCase;
 import com.book.domain.Book;
 import com.book.usecase.SimpleUseCase;
@@ -26,15 +28,15 @@ import java.util.stream.Collectors;
 public class BookApiV1 {
 
     private final SimpleUseCase<List<Book>> retrieveBooksUseCase;
-    private final UseCase<CreateBookDto, Book> createBookUseCase;
-    private final UseCase<String, Optional<Book>> retrieveBookByIdUseCase;
+    private final CreateBooksUseCase createBookUseCase;
+    private final RetrieveBookByIdUseCase retrieveBookByIdUseCase;
     private final UseCase<String, Optional<BookId>> deleteBookUseCase;
 
 
     @Autowired
     public BookApiV1(SimpleUseCase<List<Book>> retrieveBooksUseCase,
-                     UseCase<CreateBookDto, Book> createBookUseCase,
-                     UseCase<String, Optional<Book>> retrieveBookByIdUseCase,
+                     CreateBooksUseCase createBookUseCase,
+                     RetrieveBookByIdUseCase retrieveBookByIdUseCase,
                      UseCase<String, Optional<BookId>> deleteBookUseCase) {
         this.retrieveBooksUseCase = retrieveBooksUseCase;
         this.createBookUseCase = createBookUseCase;

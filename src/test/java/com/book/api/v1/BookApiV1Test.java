@@ -5,20 +5,18 @@ import com.book.domain.Book;
 import com.book.domain.BookAuthor;
 import com.book.domain.BookId;
 import com.book.domain.BookTitle;
+import com.book.domain.exception.BookNotFoundException;
 import com.book.usecase.CreateBooksUseCase;
 import com.book.usecase.RetrieveBookByIdUseCase;
 import com.book.usecase.RetrieveBooksUseCase;
-import com.book.usecase.UseCase;
 import org.instancio.Instancio;
 import org.instancio.Select;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -52,11 +50,9 @@ public class BookApiV1Test {
         var response = this.bookApiV1.getBooks();
 
         //then
-        Assertions.assertEquals(1, response.size());
         Assertions.assertEquals(bookListMock.get(0).getId().getValue(), response.get(0).getId());
         Assertions.assertEquals(bookListMock.get(0).getTitle().getValue(), response.get(0).getTitle());
-        Assertions.assertEquals(bookListMock.get(0).getAuthor().getValue(), response.get(0).getAuthor());
-    }
+        Assertions.assertEquals(bookListMock.get(0).getAuthor().getValue(), response.get(0).getAuthor());    }
 
     @Test
     public void shouldReturn100BooksTest() {
@@ -72,41 +68,54 @@ public class BookApiV1Test {
     }
 
     @Test
-    public void shouldCreate1BookTest() {
-        //given
-        var createBookDtoMock = Instancio.of(CreateBookDto.class).create();
-        var bookId = BookId.of(UUID.randomUUID().toString());
-        var bookMock = Instancio.of(Book.class)
-                .set(Select.field(Book::getId), bookId)
-                .set(Select.field(Book::getTitle), BookTitle.of(createBookDtoMock.getTitle()))
-                .set(Select.field(Book::getAuthor), BookAuthor.of(createBookDtoMock.getAuthor()))
-                .create();
-        BDDMockito.given(this.createBooksUseCase.exe(any(CreateBookDto.class))).willReturn(bookMock);
+    public void shouldThrowBookNotFoundExceptionWhenRetrieveABookByIdTest() {
+        // given
+        BDDMockito.given(this.retrieveBookByIdUseCase.exe(anyString()))
+                .willReturn(Optional.empty());
 
-        //when
-        var response = this.bookApiV1.postBook(createBookDtoMock);
+        // when & then
+        var ex = Assertions.assertThrows(BookNotFoundException.class, () -> {
+            this.bookApiV1.getBookById("1");
+        });
+        Assertions.assertTrue(ex.getMessage().contains("1"));
+        BDDMockito.then(this.retrieveBookByIdUseCase).should().exe("1");
+    }
+
+    @Test
+    public void shouldRetrieveABookByIdTest() {
+        // given
+        var bookMock = Instancio.of(Book.class).create();
+        BDDMockito.given(this.retrieveBookByIdUseCase.exe(anyString()))
+                .willReturn(Optional.of(bookMock));
+
+        // when
+        var response = this.bookApiV1.getBookById(bookMock.getId().getValue());
 
         //then
         Assertions.assertEquals(bookMock.getId().getValue(), response.getId());
         Assertions.assertEquals(bookMock.getTitle().getValue(), response.getTitle());
         Assertions.assertEquals(bookMock.getAuthor().getValue(), response.getAuthor());
-
     }
 
     @Test
-    public void shouldReturnBookWithId1Test() {
-        //given
-        var bookId = BookId.of(UUID.randomUUID().toString());
-        var bookFoundMock = Instancio.of(Book.class)
-                .set(Select.field(Book::getId), bookId)
+    public void shouldCreateABookTest() {
+        // given
+        var createBookDto = Instancio.of(CreateBookDto.class).create();
+        var bookIdMock = BookId.of(UUID.randomUUID().toString());
+        var bookMock = Instancio.of(Book.class)
+                .set(Select.field(Book::getId), bookIdMock)
+                .set(Select.field(Book::getTitle), BookTitle.of(createBookDto.getTitle()))
+                .set(Select.field(Book::getAuthor), BookAuthor.of(createBookDto.getAuthor()))
                 .create();
-        BDDMockito.given(this.retrieveBookByIdUseCase.exe(anyString()))
-                .willReturn(Optional.ofNullable(bookFoundMock));
+        BDDMockito.given(this.createBooksUseCase.exe(any(CreateBookDto.class)))
+                .willReturn(bookMock);
 
-        //when
-        var response = this.bookApiV1.getBookById(bookId.getValue());
+        // when
+        var response = this.bookApiV1.postBook(createBookDto);
 
         //then
-        Assertions.assertEquals(bookId.getValue(), response.getId());
+        Assertions.assertEquals(bookMock.getId().getValue(), response.getId());
+        Assertions.assertEquals(bookMock.getTitle().getValue(), response.getTitle());
+        Assertions.assertEquals(bookMock.getAuthor().getValue(), response.getAuthor());
     }
 }

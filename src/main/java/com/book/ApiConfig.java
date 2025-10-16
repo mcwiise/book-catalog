@@ -1,13 +1,8 @@
 package com.book;
 
-import com.book.api.v1.dto.CreateBookDto;
-import com.book.domain.BookId;
 import com.book.domain.dao.BookDao;
-import com.book.domain.dao.SimpleDao;
-import com.book.domain.dao.record.BookRecord;
 import com.book.usecase.DeleteBookByIdUseCase;
 import com.book.usecase.RetrieveBookByIdUseCase;
-import com.book.usecase.UseCase;
 import com.book.domain.Book;
 import com.book.usecase.CreateBooksUseCase;
 import com.book.usecase.RetrieveBooksUseCase;
@@ -16,33 +11,32 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
-import java.util.Optional;
 
 @Configuration
 public class ApiConfig {
 
     @Bean
-    public SimpleUseCase<List<Book>> getRetrieveBooksUseCaseBean(SimpleDao<String, BookRecord> bookDao) {
+    public SimpleUseCase<List<Book>> getRetrieveBooksUseCaseBean(BookDao bookDao) {
         return new RetrieveBooksUseCase(bookDao);
     }
 
     @Bean
-    public UseCase<CreateBookDto, Book> getCreateBookUseCaseBean() {
+    public CreateBooksUseCase getCreateBookUseCaseBean() {
         return new CreateBooksUseCase();
     }
 
     @Bean
-    public UseCase<String, Optional<Book>> getRetrieveBookByIdUseCaseBean() {
-        return new RetrieveBookByIdUseCase();
+    public RetrieveBookByIdUseCase getRetrieveBookByIdUseCaseBean(BookDao bookDao) {
+        return new RetrieveBookByIdUseCase(bookDao);
     }
 
     @Bean
-    public UseCase<String, Optional<BookId>> getDeleteBookByIdUseCaseBean() {
+    public DeleteBookByIdUseCase getDeleteBookByIdUseCaseBean() {
         return new DeleteBookByIdUseCase();
     }
 
     @Bean
-    public SimpleDao<String, BookRecord> getBookDaoBean() {
+    public BookDao getBookDaoBean() {
         return new BookDao();
     }
 }
