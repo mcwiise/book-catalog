@@ -4,6 +4,9 @@ import com.book.api.v1.dto.CreateBookDto;
 import com.book.domain.Book;
 import com.book.domain.BookAuthor;
 import com.book.domain.BookId;
+import com.book.domain.BookRating;
+import com.book.domain.BookStockCount;
+import com.book.domain.BookSummary;
 import com.book.domain.BookTitle;
 import com.book.domain.dao.SimpleDao;
 import com.book.domain.dao.record.BookRecord;
@@ -33,6 +36,9 @@ public class RetrieveBooksUseCase implements SimpleUseCase<List<Book>> {
                 .id(BookId.of(record.getId()))
                 .title(BookTitle.of(record.getTitle()))
                 .author(BookAuthor.of(record.getAuthor()))
+                .summary(BookSummary.of(record.getSummary()))
+                .stockCount(BookStockCount.of(record.getStockCount()))
+                .rating(BookRating.of(record.getRating()))
                 .build();
     }
 }

@@ -43,17 +43,4 @@ public class BookDao implements SimpleDao<String, BookRecord> {
     public Optional<BookRecord> deleteBook(String rawBookId) {
         return Optional.ofNullable(this.recordMap.remove(rawBookId));
     }
-
-    public static void main(String[] args) throws JsonProcessingException {
-        var dao = new BookDao();
-
-        var bookRecordToCreate = BookRecord.builder().title("tales").author("tales").build();
-
-        var createdBookRecord = dao.createBook(bookRecordToCreate);
-
-        String json = new ObjectMapper().writeValueAsString(createdBookRecord);
-
-        System.out.println(json);
-        System.out.println(createdBookRecord);
-    }
 }

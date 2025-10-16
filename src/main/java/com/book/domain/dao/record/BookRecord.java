@@ -11,4 +11,7 @@ public class BookRecord {
     private final String id;
     private final String title;
     private final String author;
+    private final String summary;
+    private final Integer stockCount;
+    private final Integer rating;
 }

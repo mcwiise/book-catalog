@@ -4,6 +4,9 @@ import com.book.api.v1.dto.BookDto;
 import com.book.api.v1.dto.CreateBookDto;
 import com.book.domain.BookAuthor;
 import com.book.domain.BookId;
+import com.book.domain.BookRating;
+import com.book.domain.BookStockCount;
+import com.book.domain.BookSummary;
 import com.book.domain.BookTitle;
 import com.book.domain.exception.BookNotFoundException;
 import com.book.usecase.CreateBooksUseCase;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -79,6 +83,9 @@ public class BookApiV1 {
         return Book.builder()
                 .title(BookTitle.of(dto.getTitle()))
                 .author(BookAuthor.of(dto.getAuthor()))
+                .summary(BookSummary.of(dto.getSummary()))
+                .stockCount(BookStockCount.of(dto.getStockCount()))
+                .rating(BookRating.of(dto.getRating()))
                 .build();
     }
 
@@ -86,7 +93,11 @@ public class BookApiV1 {
         var bookDto = new BookDto(
                 book.getId().getValue(),
                 book.getAuthor().getValue(),
-                book.getTitle().getValue());
+                book.getTitle().getValue(),
+                book.getSummary().getValue(),
+                book.getStockCount().getValue(),
+                book.getRating().getValue()
+        );
         return bookDto;
     }
 }

@@ -1,9 +1,11 @@
 package com.book.usecase;
 
-import com.book.api.v1.dto.CreateBookDto;
 import com.book.domain.Book;
 import com.book.domain.BookAuthor;
 import com.book.domain.BookId;
+import com.book.domain.BookRating;
+import com.book.domain.BookStockCount;
+import com.book.domain.BookSummary;
 import com.book.domain.BookTitle;
 import com.book.domain.dao.BookDao;
 import com.book.domain.dao.record.BookRecord;
@@ -29,6 +31,9 @@ public class CreateBooksUseCase implements UseCase<Book, Book> {
         return BookRecord.builder()
                 .title(book.getTitle().getValue())
                 .author(book.getAuthor().getValue())
+                .summary(book.getSummary().getValue())
+                .stockCount(book.getStockCount().getValue())
+                .rating(book.getRating().getValue())
                 .build();
     }
 
@@ -37,6 +42,9 @@ public class CreateBooksUseCase implements UseCase<Book, Book> {
                 .id(BookId.of(bookRecord.getId()))
                 .title(BookTitle.of(bookRecord.getTitle()))
                 .author(BookAuthor.of(bookRecord.getAuthor()))
+                .summary(BookSummary.of(bookRecord.getSummary()))
+                .stockCount(BookStockCount.of(bookRecord.getStockCount()))
+                .rating(BookRating.of(bookRecord.getRating()))
                 .build();
     }
 }
