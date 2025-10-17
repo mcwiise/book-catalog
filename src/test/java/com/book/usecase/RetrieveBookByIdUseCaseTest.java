@@ -1,5 +1,6 @@
 package com.book.usecase;
 
+import com.book.domain.BookId;
 import com.book.domain.dao.BookDao;
 import com.book.domain.dao.record.BookRecord;
 import org.instancio.Instancio;
@@ -31,7 +32,7 @@ public class RetrieveBookByIdUseCaseTest {
         BDDMockito.given(this.bookDao.findById(anyString())).willReturn(Optional.empty());
 
         //when
-        var response = this.retrieveBookByIdUseCase.exe("1");
+        var response = this.retrieveBookByIdUseCase.exe(BookId.of("1"));
 
         Assertions.assertFalse(response.isPresent());
     }
@@ -46,7 +47,7 @@ public class RetrieveBookByIdUseCaseTest {
         BDDMockito.given(this.bookDao.findById(anyString())).willReturn(Optional.of(bookRecord));
 
         //when
-        var response = this.retrieveBookByIdUseCase.exe(rawBookId);
+        var response = this.retrieveBookByIdUseCase.exe(BookId.of(rawBookId));
 
         //then
         Assertions.assertTrue(response.isPresent());

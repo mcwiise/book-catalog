@@ -111,8 +111,8 @@ public class BookApiV1 {
     private BookDto toDto (Book book) {
         var bookDto = new BookDto(
                 book.getId().getValue(),
-                book.getAuthor().getValue(),
                 book.getTitle().getValue(),
+                book.getAuthor().getValue(),
                 book.getSummary().getValue(),
                 book.getStockCount().getValue(),
                 book.getRating().getValue()
