@@ -99,3 +99,58 @@ Book Catalog includes a comprehensive set of unit tests covering approximately 8
 ```
 
 ## Swagger Documentation
+The Book Catalog REST API is fully documented using Swagger (OpenAPI).
+You can use the Swagger UI to explore all available endpoints, see request and response schemas.
+
+#### Swagger UI
+http://localhost:8080/swagger-ui.html
+
+#### OpenAPI JSON specification:
+http://localhost:8080/v3/api-docs
+
+## Executing the API Endpoints
+
+You can execute the following API requests using curl.
+Alternatively, you can import these curl commands into Postman, which allows you to run the same requests 
+directly from the Postman interface.
+
+#### Create a new Book
+```bash
+curl --location 'http://localhost:8080/book-catalog/v1/books' \
+--header 'Content-Type: application/json' \
+--data '{
+    "title": "berlin 1976",
+    "author": "martin davidson",
+    "summary": "the history of berlin",
+    "stockCount": 10,
+    "rating": 5
+}'
+```
+#### List all available books
+```bash
+curl --location 'http://localhost:8080/book-catalog/v1/books'
+```
+
+#### Retrieve a book by ID
+```
+curl --location 'http://localhost:8080/book-catalog/v1/books/de85c2e0-8a6e-409d-b3fd-5f113a36fe24'
+```
+
+#### Partially update and existing book
+
+Notice that only "summary", "stockCound" or "rating" can be updated
+
+```bash
+curl --location --request PUT 'http://localhost:8080/book-catalog/v1/books/6aa48e42-7b3b-405f-980b-f8e11465b6db' \
+--header 'Content-Type: application/json' \
+--data '{
+    "summary": "the history of berlinin since 1976",
+    "stockCount": 1,
+    "rating": 4
+}'
+```
+
+#### Delete a book
+```
+curl --location --request DELETE 'http://localhost:8080/book-catalog/v1/books/35dcba75-58f6-40df-8a1f-b76199918a12'
+```
