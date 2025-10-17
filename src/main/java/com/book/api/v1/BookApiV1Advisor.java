@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 @RestController
 public class BookApiV1Advisor {
+
     @ExceptionHandler(BookNotFoundException.class)
     public final ResponseEntity<HttpErrorBody> handleBookNotFoundException(BookNotFoundException ex) {
         var errBody = new HttpErrorBody(LocalDateTime.now(), ex.getMessage());
