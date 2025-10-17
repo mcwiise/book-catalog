@@ -3,7 +3,7 @@ package com.book.domain;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
+@Builder(toBuilder = true)
 @Getter
 public class Book {
     private BookId id;

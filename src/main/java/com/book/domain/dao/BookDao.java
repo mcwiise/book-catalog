@@ -1,8 +1,6 @@
 package com.book.domain.dao;
 
 import com.book.domain.dao.record.BookRecord;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,5 +40,11 @@ public class BookDao implements SimpleDao<String, BookRecord> {
     @Override
     public Optional<BookRecord> deleteBook(String rawBookId) {
         return Optional.ofNullable(this.recordMap.remove(rawBookId));
+    }
+
+    @Override
+    public BookRecord updateBook(BookRecord record) {
+        recordMap.put(record.getId(), record);
+        return record;
     }
 }

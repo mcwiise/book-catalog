@@ -3,14 +3,12 @@ package com.book;
 import com.book.domain.dao.BookDao;
 import com.book.usecase.DeleteBookByIdUseCase;
 import com.book.usecase.RetrieveBookByIdUseCase;
-import com.book.domain.Book;
 import com.book.usecase.CreateBooksUseCase;
 import com.book.usecase.RetrieveBooksUseCase;
-import com.book.usecase.SimpleUseCase;
+import com.book.usecase.UpdateBookUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
 
 @Configuration
 public class ApiConfig {
@@ -33,6 +31,11 @@ public class ApiConfig {
     @Bean
     public DeleteBookByIdUseCase getDeleteBookByIdUseCaseBean(BookDao bookDao) {
         return new DeleteBookByIdUseCase(bookDao);
+    }
+
+    @Bean
+    public UpdateBookUseCase getUpdateBookUseCaseBean(BookDao bookDao) {
+        return new UpdateBookUseCase(bookDao);
     }
 
     @Bean

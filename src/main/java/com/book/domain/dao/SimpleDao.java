@@ -8,4 +8,6 @@ public interface SimpleDao<ID,R> {
     Optional<R> findById(ID id);
     R createBook(R record);
     Optional<R> deleteBook(ID id);
+    R updateBook(R record);
+
 }
