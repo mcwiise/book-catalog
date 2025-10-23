@@ -11,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 @ExtendWith(MockitoExtension.class)
 public class RetrieveBooksUseCaseTest {
 
@@ -27,7 +29,7 @@ public class RetrieveBooksUseCaseTest {
         BDDMockito.given(this.bookDao.findAll()).willReturn(bookRecordListMock);
 
         //when
-        var response = this.retrieveBooksUseCase.exe();
+        var response = this.retrieveBooksUseCase.exe(Optional.empty());
 
         Assertions.assertEquals(2, response.size());
         Assertions.assertEquals(bookRecordListMock.get(0).getId(), response.get(0).getId().getValue());

@@ -9,6 +9,7 @@ import com.book.domain.BookRating;
 import com.book.domain.BookStockCount;
 import com.book.domain.BookSummary;
 import com.book.domain.BookTitle;
+import com.book.domain.FilterCriteria;
 import com.book.domain.exception.BookNotFoundException;
 import com.book.usecase.CreateBooksUseCase;
 import com.book.usecase.DeleteBookByIdUseCase;
@@ -25,9 +26,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -54,8 +57,18 @@ public class BookApiV1 {
     }
 
     @GetMapping(path = "/books")
-    public List<BookDto> getBooks(){
-        return this.retrieveBooksUseCase.exe().stream()
+    public List<BookDto> getBooks(@RequestParam(required = false) String title,
+                                  @RequestParam(required = false) String author,
+                                  @RequestParam(required = false) Integer rating){
+        var criteria = Optional.ofNullable(
+                FilterCriteria.builder()
+                        .author(BookAuthor.of(author))
+                        .title(BookTitle.of(title))
+                        .rating(BookRating.of(rating))
+                        .build()
+        );
+        return this.retrieveBooksUseCase.exe(criteria)
+                .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }

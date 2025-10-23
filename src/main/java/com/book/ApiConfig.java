@@ -6,10 +6,8 @@ import com.book.usecase.RetrieveBookByIdUseCase;
 import com.book.usecase.CreateBooksUseCase;
 import com.book.usecase.RetrieveBooksUseCase;
 import com.book.usecase.UpdateBookUseCase;
-import org.springdoc.core.properties.SwaggerUiConfigProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 
 @Configuration

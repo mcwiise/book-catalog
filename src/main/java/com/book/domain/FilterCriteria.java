@@ -5,12 +5,8 @@ import lombok.Getter;
 
 @Builder(toBuilder = true)
 @Getter
-public class Book {
-    private String bookId;
-    private BookId id;
+public class FilterCriteria {
     private BookTitle title;
     private BookAuthor author;
-    private BookSummary summary;
-    private BookStockCount stockCount;
     private BookRating rating;
 }

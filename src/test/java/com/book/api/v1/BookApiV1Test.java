@@ -23,7 +23,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -46,10 +45,10 @@ public class BookApiV1Test {
     public void shouldReturn1BookTest() {
         //given
         var bookListMock = Instancio.ofList(Book.class).size(1).create();
-        BDDMockito.given(this.retrieveBooksUseCase.exe()).willReturn(bookListMock);
+        BDDMockito.given(this.retrieveBooksUseCase.exe(org.mockito.ArgumentMatchers.<Optional<com.book.domain.FilterCriteria>>any())).willReturn(bookListMock);
 
         //when
-        var response = this.bookApiV1.getBooks();
+        var response = this.bookApiV1.getBooks(null, null, null);
 
         //then
         Assertions.assertEquals(bookListMock.get(0).getId().getValue(), response.get(0).getId());
@@ -64,10 +63,10 @@ public class BookApiV1Test {
     public void shouldReturn100BooksTest() {
         //given
         var bookListMock = Instancio.ofList(Book.class).size(100).create();
-        BDDMockito.given(this.retrieveBooksUseCase.exe()).willReturn(bookListMock);
+        BDDMockito.given(this.retrieveBooksUseCase.exe(org.mockito.ArgumentMatchers.<Optional<com.book.domain.FilterCriteria>>any())).willReturn(bookListMock);
 
         //when
-        var response = this.bookApiV1.getBooks();
+        var response = this.bookApiV1.getBooks(null, null, null);
 
         //then
         Assertions.assertEquals(100, response.size());
@@ -110,7 +109,7 @@ public class BookApiV1Test {
     public void shouldCreateABookTest() {
         // given
         var createBookDto = Instancio.of(CreateBookDto.class).create();
-        var bookIdMock = BookId.of(UUID.randomUUID().toString());
+        var bookIdMock = BookId.of(java.util.UUID.randomUUID().toString());
         var bookMock = Instancio.of(Book.class)
                 .set(Select.field(Book::getId), bookIdMock)
                 .set(Select.field(Book::getTitle), BookTitle.of(createBookDto.getTitle()))
